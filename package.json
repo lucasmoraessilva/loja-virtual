@@ -1,0 +1,19 @@
+{
+  "name": "loja-virtual",
+  "version": "1.0.0",
+  "description": "Projeto Loja Virtual para avaliação da Compass.Uol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasmoraessilva/loja-virtual.git"
+  },
+  "author": "Lucas Moraes da Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasmoraessilva/loja-virtual/issues"
+  },
+  "homepage": "https://github.com/lucasmoraessilva/loja-virtual#readme"
+}
