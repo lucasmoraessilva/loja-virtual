@@ -42,14 +42,19 @@ export class UsuarioDatabase {
         return UsuarioDatabase.instance;
     }
 
-    login(email: string, senha: string){
+    login(email: string, senha: string): Promise<string> {
         return new Promise((resolve, reject) =>{
             mongoose.set('strictQuery', false);
             mongoose.connect(UsuarioDatabase.connectionString);
 
             UsuarioDatabase.UsuarioModel.exists( { _email: email, _senha: senha } )
-                .then(data => {
-                    resolve(data)
+                .then((objectId: { _id: string }) => {
+                    if(objectId)
+                        return UsuarioDatabase.UsuarioModel.findOne({ _id: objectId._id }, '_uid -_id');
+                    throw new Error("'email' ou 'senha' incorreto!")
+                })
+                .then((userUidObject: { _uid: string }) => {
+                    resolve(userUidObject._uid);
                 })
                 .catch(error => {
                     reject(error)
