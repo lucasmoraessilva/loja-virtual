@@ -60,12 +60,12 @@ export class ProdutoDatabase {
             produtoModel.save()
                 .then(produto => resolve(
                     {
-                        _uid: produto.uid,
-                        _nome: produto.nome,
-                        _descricao: produto.descricao,
-                        _preco: produto.preco,
-                        _imagens: produto.imagens,
-                        _status: produto.status
+                        uid: produto._uid,
+                        nome: produto._nome,
+                        descricao: produto._descricao,
+                        preco: produto._preco,
+                        imagens: produto._imagens,
+                        status: produto._status
                     }
                 ))
                 .catch(error => reject(error));
@@ -80,7 +80,18 @@ export class ProdutoDatabase {
             const produtoModel = ProdutoDatabase.ProdutoModel;
 
             produtoModel.find({ _status: 1 }, '-_id _uid _nome _descricao _preco _imagens _status')
-                .then(data => resolve(data))
+                .then(data => resolve(
+                    data.map(produto => {
+                        return {
+                            uid: produto._uid,
+                            nome: produto._nome,
+                            descricao: produto._descricao,
+                            preco: produto._preco,
+                            imagens: produto._imagens,
+                            status: produto._status
+                        };
+                    })
+                ))
                 .catch(error => reject(error));
         });
     }
@@ -92,8 +103,17 @@ export class ProdutoDatabase {
 
             const produtoModel = ProdutoDatabase.ProdutoModel;
 
-            produtoModel.find({ _uid: uid }, '-_id _uid _nome _descricao _preco _imagens _status')
-                .then(data => resolve(data))
+            produtoModel.findOne({ _uid: uid }, '-_id _uid _nome _descricao _preco _imagens _status')
+                .then(data => resolve(
+                    {
+                        uid: data._uid,
+                        nome: data._nome,
+                        descricao: data._descricao,
+                        preco: data._preco,
+                        imagens: data._imagens,
+                        status: data._status
+                    }
+                ))
                 .catch(error => reject(error));
         });
     }

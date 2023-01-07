@@ -14,7 +14,7 @@ export function pegarTodosStatusDisponivel(_: Request, res: Response) {
                 }
             });
         })
-        .catch(error => {
+        .catch(_ => {
             res.status(500).send({
                 status: "fail",
                 data: {
@@ -22,7 +22,6 @@ export function pegarTodosStatusDisponivel(_: Request, res: Response) {
                 }
             });
         })
-    
 }
 
 export function pegarPorId(req: Request, res: Response) {
@@ -85,7 +84,7 @@ export function adicionar(req: Request,res: Response) {
         });
     })
     .catch(error =>{
-        res.status(500).send({
+        res.status(400).send({
             status: 'fail',
             data:{
                 message: error.message
@@ -106,8 +105,8 @@ export function atualizaPorPartes(req: Request,res: Response){
     }
     
     ProdutoDatabase.getInstance().atualizarProduto(req.params.uid, req.body)
-    .then(data => {
-        res.status(200).send();
+    .then(_ => {
+        res.status(204).send();
     })
     .catch(error => {
         res.status(400).send({
@@ -131,8 +130,8 @@ export function atualizaCompleto(req: Request,res: Response){
     }
 
     ProdutoDatabase.getInstance().atualizarProduto(req.params.uid, req.body)
-    .then(data => {
-        res.status(200).send();
+    .then(_ => {
+        res.status(204).send();
     })
     .catch(error => {
         res.status(400).send({
@@ -156,8 +155,8 @@ export function deleta(req: Request,res: Response){
     }
 
     ProdutoDatabase.getInstance().deletarProduto(req.params.uid)
-    .then(data => {
-        res.status(200).send();
+    .then(_ => {
+        res.status(204).send();
     })
     .catch(error => {
         res.status(400).send({
