@@ -1,4 +1,3 @@
-import { rejects } from 'assert';
 import mongoose from 'mongoose';
 import { Produto } from '../models/Produto';
 
@@ -40,7 +39,6 @@ export class ProdutoDatabase {
         });
 
         ProdutoDatabase.ProdutoModel = mongoose.model('Produto', ProdutoDatabase.schema);
-        console.log(typeof ProdutoDatabase.ProdutoModel)
     }
 
     static getInstance(): ProdutoDatabase {
