@@ -1,15 +1,11 @@
 import { StatusProduto } from "../enums/StatusProduto";
 
 export class Produto{
-    constructor(private _id: number, private _nome: string, private _descricao: string, private _preco: number, private _imagens: string[], private _status: StatusProduto) {
+    constructor(private _uid: string, private _nome: string, private _descricao: string, private _preco: number, private _imagens: string[], private _status: StatusProduto) {
     }
 
-    get id(): number{
-        return this._id;
-    }
-
-    set id(value: number){
-        this._id = value;
+    get uid(): string{
+        return this._uid;
     }
 
     get nome(): string{
