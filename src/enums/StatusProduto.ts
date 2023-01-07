@@ -1,4 +1,4 @@
 export enum StatusProduto{
     Criado,
-    Disponível
+    Disponivel
 }
