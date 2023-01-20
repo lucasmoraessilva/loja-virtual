@@ -1,13 +1,16 @@
-import express from "express";
-import { adicionar, atualizaCompleto, atualizaPorPartes, deleta, pegarPorId, pegarTodosStatusDisponivel } from "../controllers/ProdutoController";
+import { Router } from "express";
+import ProdutoController from "../controllers/ProdutoController";
 import { body, param } from "express-validator";
+import { MongoProductRepository } from "../repositories/implementations/MongoProductRepository";
+import AsyncMiddlewareAdapter from "../adapters/AsyncMiddlewareAdapter";
 
-const router = express.Router();
+const router = Router();
+const produtoController = new ProdutoController(new MongoProductRepository());
 
-router.get("/", pegarTodosStatusDisponivel);
+router.get("/", produtoController.pegarTodosStatusDisponivel);
 router.get("/:uid",
     param('uid', "'uid' inválido!").not().isEmpty().withMessage("'uid' está vazio!").isString().withMessage("'uid' não possui um valor válido!").isHexadecimal().withMessage("'uid' não possui um formato válido!"),
-    pegarPorId
+    AsyncMiddlewareAdapter(produtoController.pegarPorId)
 );
 router.post("/",
     body('nome', "'nome' inválido!").not().isEmpty().withMessage("'nome' está vazio!").isString().withMessage("'nome' não possui um valor válido!"),
@@ -15,7 +18,7 @@ router.post("/",
     body('preco', "'preco' inválido!").not().isEmpty().withMessage("'preco' está vazio!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'preco' não possui um valor válido!"),
     body('imagens', "'imagens' inválido!").not().isEmpty().withMessage("'imagens' está vazio!").isArray().withMessage("'imagens' não possui um valor válido!"),
     body('status', "'status' inválido!").not().isEmpty().withMessage("'status' está vazio!").not().isString().withMessage("'status' não possui o formato de dado correto!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'status' não possui um valor válido!").isIn([0,1]).withMessage("'status' não possui o valor de um status possível!"),
-    adicionar
+    AsyncMiddlewareAdapter(produtoController.adicionar)
 );
 router.patch("/:uid",
     param('uid', "'uid' inválido!").not().isEmpty().withMessage("'uid' está vazio!").isString().withMessage("'uid' não possui um valor válido!").isHexadecimal().withMessage("'uid' não possui um formato válido!"),
@@ -24,7 +27,7 @@ router.patch("/:uid",
     body('preco', "'preco' inválido!").optional().not().isEmpty().withMessage("'preco' está vazio!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'preco' não possui um valor válido!"),
     body('imagens', "'imagens' inválido!").optional().not().isEmpty().withMessage("'imagens' está vazio!").isArray().withMessage("'imagens' não possui um valor válido!"),
     body('status', "'status' inválido!").optional().not().isEmpty().withMessage("'status' está vazio!").not().isString().withMessage("'status' não possui o formato de dado correto!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'status' não possui um valor válido!").isIn([0,1]).withMessage("'status' não possui o valor de um status possível!"),
-    atualizaPorPartes
+    AsyncMiddlewareAdapter(produtoController.atualizaPorPartes)
 );
 router.put("/:uid",
     param('uid', "'uid' inválido!").not().isEmpty().withMessage("'uid' está vazio!").isString().withMessage("'uid' não possui um valor válido!").isHexadecimal().withMessage("'uid' não possui um formato válido!"),
@@ -33,11 +36,11 @@ router.put("/:uid",
     body('preco', "'preco' inválido!").not().isEmpty().withMessage("'preco' está vazio!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'preco' não possui um valor válido!"),
     body('imagens', "'imagens' inválido!").not().isEmpty().withMessage("'imagens' está vazio!").isArray().withMessage("'imagens' não possui um valor válido!"),
     body('status', "'status' inválido!").not().isEmpty().withMessage("'status' está vazio!").not().isString().withMessage("'status' não possui o formato de dado correto!").isNumeric({ no_symbols: false, locale: 'en-US'}).withMessage("'status' não possui um valor válido!").isIn([0,1]).withMessage("'status' não possui o valor de um status possível!"),
-    atualizaCompleto
+    AsyncMiddlewareAdapter(produtoController.atualizaCompleto)
 );
 router.delete("/:uid",
     param('uid', "'uid' inválido!").not().isEmpty().withMessage("'uid' está vazio!").isString().withMessage("'uid' não possui um valor válido!").isHexadecimal().withMessage("'uid' não possui um formato válido!"),
-    deleta
+    AsyncMiddlewareAdapter(produtoController.deleta)
 );
 
 export { router };
