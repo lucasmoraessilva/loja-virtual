@@ -1,4 +1,5 @@
 import mongoose, { Schema, Model } from "mongoose";
+import GenericApiError from "../../errors/GenericApiError";
 import { VendedorSchema } from "../../schemas/VendedorSchema";
 import { IUserRepository } from "../IUserRepository";
 
@@ -22,16 +23,12 @@ export default class MongoUserRepository implements IUserRepository {
                 const existsResult = await this.userModel.exists({ _email: email, _senha: password });
 
                 if(!existsResult){
-                    throw new Error();
+                    throw new GenericApiError(`E-mail e/ou senha incorretos.`, 400, 'fail');
                 }
 
                 const findResult = await this.userModel.findOne({ _id: existsResult._id }, '_uid -_id');
 
-                if(!findResult){
-                    throw new Error();
-                }
-
-                resolve(String(findResult._uid));
+                resolve(String(findResult!._uid));
             }
             catch (error) {
                 reject(error)

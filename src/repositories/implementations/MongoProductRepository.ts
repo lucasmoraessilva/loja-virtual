@@ -122,7 +122,7 @@ export class MongoProductRepository implements IProductRepository {
     
                 const prdModel = this.productModel;
 
-                const a = await prdModel.deleteOne({ _uid: uid });
+                await prdModel.deleteOne({ _uid: uid });
                 
                 resolve();
             } catch (error) {
