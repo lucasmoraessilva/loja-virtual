@@ -1,22 +1,25 @@
-export const ProdutoSchema = {
+import { Types } from "mongoose";
+
+export const ProductSchema = {
     _uid: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
-    _nome: {
+    _name: {
         type: String,
         required: true,
         unique: true,
     },
-    _descricao: {
+    _description: {
         type: String,
         required: true,
     },
-    _preco: {
+    _price: {
         type: Number,
         required: true,
     },
-    _imagens: [{
+    _images: [{
         type: String,
         required: true,
     }],
@@ -24,5 +27,10 @@ export const ProdutoSchema = {
         type: Number,
         required: true,
         enum: [0,1]
+    },
+    _sells: {
+        type: [Types.ObjectId],
+        ref: 'Sale',
+        required: false
     }
 };

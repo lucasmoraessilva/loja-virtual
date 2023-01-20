@@ -1,21 +1,20 @@
-export const VendedorSchema = {
+export const BuyerSchema = {
     _uid: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
-    _nome: {
+    _name: {
         type: String,
         required: true,
     },
     _email: {
         type: String,
         required: true,
+        unique: true
     },
-    _senha: {
+    _password: {
         type: String,
         required: true,
-    },
-    _produtos: {
-        type: [{}],
     }
 }
