@@ -26,9 +26,9 @@ export const ProductSchema = {
     _status: {
         type: Number,
         required: true,
-        enum: [0,1]
+        enum: [0,1,2]
     },
-    _sells: {
+    _sales: {
         type: [Types.ObjectId],
         ref: 'Sale',
         required: false
