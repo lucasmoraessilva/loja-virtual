@@ -1,4 +1,6 @@
-export const BuyerSchema = {
+import { Schema } from "mongoose";
+
+export const BuyerSchema = new Schema({
     _uid: {
         type: String,
         unique: true,
@@ -17,4 +19,4 @@ export const BuyerSchema = {
         type: String,
         required: true,
     }
-}
+});

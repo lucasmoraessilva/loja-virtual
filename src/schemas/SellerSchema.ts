@@ -1,6 +1,7 @@
+import { Schema } from "mongoose";
 import { ProductSchema } from "./ProductSchema";
 
-export const SellerSchema = {
+export const SellerSchema = new Schema({
     _uid: {
         type: String,
         unique: true,
@@ -23,4 +24,4 @@ export const SellerSchema = {
         type: [ProductSchema],
         required: false,
     }
-}
+});

@@ -1,6 +1,6 @@
-import { Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 
-export const SaleSchema = {
+export const SaleSchema = new Schema({
     _uid: {
         type: String,
         unique: true,
@@ -16,4 +16,4 @@ export const SaleSchema = {
         ref: 'Product',
         required: true
     }
-}
+});
