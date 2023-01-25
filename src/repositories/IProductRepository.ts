@@ -1,11 +1,12 @@
-import { Produto } from "../models/Produto";
+import { Product } from "../models/Product";
 
 export interface IProductRepository{
-    findAll(): Promise<Produto[]>;
-    findAllWithAvailableStatus(): Promise<Produto[]>;
-    findByUid(uid: string): Promise<Produto>;
-    add(newProduct: Produto): Promise<Produto>;
-    update(uid: string, produto: Produto): Promise<Produto>;
-    patch(uid: string, produto: Produto): Promise<Produto>;
-    delete(uid: string): Promise<void>;
+    findAll(sellerUid: string): Promise<Product[]>;
+    findAllWithAvailableStatus(sellerUid: string): Promise<Product[]>;
+    findByUid(sellerUid: string, uid: string): Promise<Product>;
+    add(sellerUid: string, newProduct: Product): Promise<Product>;
+    update(sellerUid: string, uid: string, produto: Product): Promise<Product>;
+    patch(sellerUid: string, uid: string, produto: Product): Promise<Product>;
+    delete(sellerUid: string, uid: string): Promise<void>;
+    findAvailableByUid(sellerUid: string, uid: string): Promise<Product>
 }
