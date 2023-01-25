@@ -1,24 +1,16 @@
-import mongoose, { Schema, Model } from "mongoose";
+import mongoose from "mongoose";
 import { ProductStatus } from "../../enums/ProductStatus";
 import GenericApiError from "../../errors/GenericApiError";
-import { Product } from "../../models/Product";
-import { ProductSchema } from "../../schemas/ProductSchema";
-import { SellerSchema } from "../../schemas/SellerSchema";
+import { Product } from "../../entities/Product";
 import { IProductRepository } from "../IProductRepository";
+import { SellerModel } from "../../models/SellerModel";
+import { ProductModel } from "../../models/ProductModel";
 
 export class MongoProductRepository implements IProductRepository {
     private connectionString: string;
-    private productSchema: Schema<typeof ProductSchema>;
-    private productModel: Model<typeof ProductSchema>;
-    private sellerSchema: Schema<typeof SellerSchema>;
-    private sellerModel: Model<typeof SellerSchema>;
 
     constructor() {
         this.connectionString = process.env.DB_CONNECTION_STRING!.replace('<PASSWORD>', process.env.DB_PASSWORD!);
-        this.productSchema = new Schema(ProductSchema);
-        this.productModel = mongoose.model('Product',this.productSchema, '');
-        this.sellerSchema = new Schema(SellerSchema);
-        this.sellerModel = mongoose.model('Seller',this.sellerSchema, 'sellers');
         mongoose.set('strictQuery', false);
     }
 
@@ -35,7 +27,7 @@ export class MongoProductRepository implements IProductRepository {
             try {
                 mongoose.connect(this.connectionString);
 
-                const seller = await this.sellerModel.findOne({ _uid: sellerUid }, '_products');
+                const seller = await SellerModel.findOne({ _uid: sellerUid }, '_products');
 
                 resolve(Object.assign(Array<Product>(), seller!._products));
             } catch (error) {
@@ -99,7 +91,7 @@ export class MongoProductRepository implements IProductRepository {
             try {
                 mongoose.connect(this.connectionString);
 
-                const newProductModel = new this.productModel({
+                const newProductModel = new ProductModel({
                     _uid: newProduct._uid,
                     _name: newProduct._name,
                     _description: newProduct._description,
@@ -108,7 +100,7 @@ export class MongoProductRepository implements IProductRepository {
                     _status: newProduct._status
                 });
 
-                const updateResult = await this.sellerModel.updateOne({ _uid: sellerUid }, { $push: { _products: newProductModel } });
+                const updateResult = await SellerModel.updateOne({ _uid: sellerUid }, { $push: { _products: newProductModel } });
 
                 if(!updateResult.acknowledged){
                     throw new GenericApiError('Não foi possível adicionar o produto.', 400, 'fail');
@@ -130,7 +122,7 @@ export class MongoProductRepository implements IProductRepository {
 
                 const sales = (await this.findByUid(sellerUid, uid)).sales;
 
-                const newProductModel = new this.productModel({
+                const newProductModel = new ProductModel({
                     _uid: uid,
                     _name: productToUpdate.name,
                     _description: productToUpdate.description,
@@ -140,7 +132,7 @@ export class MongoProductRepository implements IProductRepository {
                     _sales: sales
                 });
 
-                const updateResult = await this.sellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  newProductModel } });
+                const updateResult = await SellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  newProductModel } });
 
                 if(!updateResult.modifiedCount){
                     throw new GenericApiError('Não foi possível atualizar o produto.', 400, 'fail');
@@ -164,7 +156,7 @@ export class MongoProductRepository implements IProductRepository {
 
                 this.replaceProductValues(productToUpdate, productToBeUpdated);
 
-                const updateResult = await this.sellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  productToBeUpdated } });
+                const updateResult = await SellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  productToBeUpdated } });
 
                 if(!updateResult.modifiedCount){
                     throw new GenericApiError('Não foi possível atualizar o produto.', 400, 'fail');
@@ -188,7 +180,7 @@ export class MongoProductRepository implements IProductRepository {
 
                 productToBeRemoved._status = ProductStatus.Deleted.valueOf();
 
-                const updateResult = await this.sellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  productToBeRemoved } });
+                const updateResult = await SellerModel.updateOne({ '_products._uid': uid }, { $set: { '_products.$':  productToBeRemoved } });
 
                 if(!updateResult.modifiedCount){
                     throw new GenericApiError('Não foi possível excluir o produto.', 400, 'fail');

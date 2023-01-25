@@ -1,4 +1,4 @@
-import { Product } from "../models/Product";
+import { Product } from "../entities/Product";
 
 export interface IProductRepository{
     findAll(sellerUid: string): Promise<Product[]>;

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Product } from "../models/Product";
+import { Product } from "../entities/Product";
 import { validationResult } from "express-validator";
 import { Types } from "mongoose";
 import { IProductRepository } from "../repositories/IProductRepository";
