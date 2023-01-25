@@ -4,11 +4,11 @@ import jwt from "jsonwebtoken";
 import ValidationError from "../errors/ValidationError";
 import { IUserRepository } from "../repositories/IUserRepository";
 
-export default class UsuarioController{
+export default class UserController{
     private static userRepository: IUserRepository;
 
     constructor(userRepository: IUserRepository) {
-        UsuarioController.userRepository = userRepository;
+        UserController.userRepository = userRepository;
     }
 
     async login(req: Request, res: Response, next: NextFunction){
@@ -17,9 +17,9 @@ export default class UsuarioController{
             return next(new ValidationError(400, 'fail', errors.array().map(error => error.msg)));
         }
     
-        const _uid = await UsuarioController.userRepository.login(req.body.email, req.body.senha);
+        const loginResult = await UserController.userRepository.login(req.body.email, req.body.password);
 
-        const token = await jwt.sign({ _uid }, process.env.JWT_SECRET!, { expiresIn: "6h" });
+        const token = await jwt.sign(loginResult, process.env.JWT_SECRET!, { expiresIn: "6h" });
 
         res.status(200).send({
             status: 'success',
